@@ -1,4 +1,5 @@
 const express = require('express')  
+const { randomInt } = require('crypto')
 
 // Appel de la fonction express() pour creer une instance de notre application
 // La variable app represente notre serveur web
@@ -23,8 +24,6 @@ const dresseurs = [
     { id: 4, nom: 'Régis', ville: 'bourg-palette' }
 ]
 
-
-
 // Definit la route GET '/'
 app.get('/', (req, res) => {
     // Renvoie une chaine de caractère au navigateur
@@ -43,6 +42,13 @@ app.get('/api/pokemons', (req, res) => {
     res.json(pokemons)
 })
 
+// Renvoie un pokemon choisi au hasard
+app.get('/api/pokemons/aleatoire', (req, res) => {
+    const index = randomInt(pokemons.length)
+
+    res.json(pokemons[index])
+})
+
 // Renvoie un pokemon a partir de son id
 app.get('/api/pokemons/:id', (req, res) => {
     const id = Number(req.params.id)
@@ -57,6 +63,8 @@ app.get('/api/pokemons/:id', (req, res) => {
     }
     res.json(pokemon)
 })
+
+
 
 // Renvoie la liste de tous les dresseurs
 app.get('/api/dresseurs', (req, res) => {
