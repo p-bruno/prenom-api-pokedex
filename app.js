@@ -34,6 +34,18 @@ app.get('/api/pokemons/:id', (req, res) => {
     res.json(pokemon)
 })
 
+// Renvoie la liste de tous les dresseurs
+app.get('/api/dresseurs', (req, res) => {
+    res.json(dresseurs)
+})
+
+// Renvoie un dresseur à partir de son identifiant
+app.get('/api/dresseurs/:id', (req, res) => {
+    const id = Number(req.params.id)
+    const dresseur = dresseurs.find(d => d.id === id)
+    res.json(dresseur)
+})
+
 // Demarre le serveur
 app.listen(port, () => {
     console.log(`Serveur démarré sur http://localhost:${port}`)
