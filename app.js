@@ -30,7 +30,15 @@ app.get('/api/pokemons', (req, res) => {
 // Renvoie un pokemon a partir de son id
 app.get('/api/pokemons/:id', (req, res) => {
     const id = Number(req.params.id)
+
+    if (Number.isNaN(id)) {
+        return res.status(400).json({message: "L'identifiant doit être un nombre"})
+    }
     const pokemon = pokemons.find(p => p.id === id)
+
+    if(!pokemon) {
+       return res.status(404).json({message: 'Pokemon introuvable'})
+    }
     res.json(pokemon)
 })
 
@@ -43,6 +51,10 @@ app.get('/api/dresseurs', (req, res) => {
 app.get('/api/dresseurs/:id', (req, res) => {
     const id = Number(req.params.id)
     const dresseur = dresseurs.find(d => d.id === id)
+
+    if(!dresseur) {
+        return res.status(404).json({message: 'Dresseur introuvable'})
+    }
     res.json(dresseur)
 })
 
