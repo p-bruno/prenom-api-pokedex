@@ -16,6 +16,8 @@ const pokemons = [
     { id: 37, nom: 'Goupix', type: 'feu' }
 ]
 
+
+
 // Definit la route GET '/'
 app.get('/', (req, res) => {
     // Renvoie une chaine de caractère au navigateur
@@ -24,6 +26,13 @@ app.get('/', (req, res) => {
 
 // Renvoie la liste des pokémons
 app.get('/api/pokemons', (req, res) => {
+    const type = req.query.type
+
+    if (type) {
+        const resultat = pokemons.filter(p => p.type === type)
+        return res.json(resultat)
+    }
+
     res.json(pokemons)
 })
 
