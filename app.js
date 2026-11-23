@@ -1,6 +1,15 @@
 const express = require('express')  
 const { randomInt } = require('crypto')
 
+/* 
+Requête → route → Réponse
+
+Requête → middleware 1 → route → Réponse
+
+Requête → middleware 1 → middleware 2 → route → Réponse
+
+*/
+
 // Appel de la fonction express() pour creer une instance de notre application
 // La variable app represente notre serveur web
 const app = express()
@@ -23,6 +32,13 @@ const dresseurs = [
     { id: 3, nom: 'Pierre', ville: 'argenta' },
     { id: 4, nom: 'Régis', ville: 'bourg-palette' }
 ]
+
+// Affiche chaque reqete recue dans le terminal
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.url}`)
+
+    next()
+})
 
 // Definit la route GET '/'
 app.get('/', (req, res) => {
@@ -81,6 +97,11 @@ app.get('/api/dresseurs/:id', (req, res) => {
     }
     res.json(dresseur)
 })
+
+app.use((req, res, next) => {
+    res.status(404).json({message: "Route introuvable"})
+})
+
 
 // Demarre le serveur
 app.listen(port, () => {
