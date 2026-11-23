@@ -1,5 +1,6 @@
 const express = require('express')  
 const { randomInt } = require('crypto')
+const morgan = require('morgan')
 
 /* 
 Requête → route → Réponse
@@ -34,11 +35,7 @@ const dresseurs = [
 ]
 
 // Affiche chaque reqete recue dans le terminal
-app.use((req, res, next) => {
-    console.log(`${req.method} ${req.url}`)
-
-    next()
-})
+app.use(morgan('dev'))
 
 const verifierId = (req,res,next) => {
     const id = Number(req.params.id)
