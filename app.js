@@ -40,6 +40,17 @@ app.use((req, res, next) => {
     next()
 })
 
+const verifierId = (req,res,next) => {
+    const id = Number(req.params.id)
+
+    if(Number.isNaN(id)) {
+        res.status(400).json({message: "L'id doit être un nombre"})
+    }
+
+    req.id = id 
+    next()
+}
+
 // Definit la route GET '/'
 app.get('/', (req, res) => {
     // Renvoie une chaine de caractère au navigateur
@@ -66,13 +77,9 @@ app.get('/api/pokemons/aleatoire', (req, res) => {
 })
 
 // Renvoie un pokemon a partir de son id
-app.get('/api/pokemons/:id', (req, res) => {
-    const id = Number(req.params.id)
+app.get('/api/pokemons/:id', verifierId,  (req, res) => {
 
-    if (Number.isNaN(id)) {
-        return res.status(400).json({message: "L'identifiant doit être un nombre"})
-    }
-    const pokemon = pokemons.find(p => p.id === id)
+    const pokemon = pokemons.find(p => p.id === req.id)
 
     if(!pokemon) {
        return res.status(404).json({message: 'Pokemon introuvable'})
@@ -88,7 +95,7 @@ app.get('/api/dresseurs', (req, res) => {
 })
 
 // Renvoie un dresseur à partir de son identifiant
-app.get('/api/dresseurs/:id', (req, res) => {
+app.get('/api/dresseurs/:id', verifierId, (req, res) => {
     const id = Number(req.params.id)
     const dresseur = dresseurs.find(d => d.id === id)
 
