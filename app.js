@@ -1,6 +1,7 @@
 const express = require('express')  
 const { randomInt } = require('crypto')
 const morgan = require('morgan')
+const { cpSync } = require('fs')
 
 /* 
 Requête → route → Réponse
@@ -104,6 +105,27 @@ app.get('/api/pokemons/:id', verifierId,  (req, res) => {
     if(!pokemon) {
        return res.status(404).json({message: 'Pokemon introuvable'})
     }
+    res.json(pokemon)
+})
+
+// Modifie un pokémon
+app.put('/api/pokemons/:id', verifierId, (req, res) => {
+    const pokemon = pokemons.find(p => p.id === req.id)
+
+    if(!pokemon) {
+        return res.status(404).json({message:"Pokémon introuvable"})
+    }
+
+    const nom = req.body.nom
+    const type = req.body.type
+
+    if (!nom || !type) {
+        return res.status(400).json({message: "Les champes nom et type sont obligatoire"})
+    }
+
+    pokemon.nom = nom
+    pokemon.type= type
+
     res.json(pokemon)
 })
 
