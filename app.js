@@ -129,6 +129,19 @@ app.put('/api/pokemons/:id', verifierId, (req, res) => {
     res.json(pokemon)
 })
 
+// Supprime un pokémon
+app.delete('/api/pokemons/:id', verifierId, (req, res) =>{
+    const index = pokemons.findIndex(p => p.id === req.id)
+
+    if (index === -1) {
+        return res.status(404).json({message: "Pokémon introuvable"})
+    }
+
+    pokemons.splice(index,1)
+
+    res.status(204).json()
+} )
+
 // Renvoie la liste de tous les dresseurs
 app.get('/api/dresseurs', (req, res) => {
     res.json(dresseurs)
