@@ -72,6 +72,10 @@ app.post('/api/pokemons', (req, res) => {
     const nom = req.body.nom
     const type = req.body.type
 
+    if (!nom || !type) {
+        res.status(400).json({message: "Le champ nom et type sont obligatoires"})
+    }
+
     let idMax = 0
     for (const pokemon of pokemons) {
         if(pokemon.id > idMax) {
