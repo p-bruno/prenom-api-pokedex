@@ -4,6 +4,8 @@ const morgan = require('morgan')
 const { cpSync } = require('fs')
 const pokemons = require('./data/pokemons')
 const dresseurs = require('./data/dresseurs')
+const verifierId = require('./middlewares/verifierId')
+const {chargerPokemon, chargerDresseur} = require('./middlewares/charger')
 
 /* 
 Requête → route → Réponse
@@ -28,16 +30,7 @@ const port = 3000
 app.use(morgan('dev'))
 app.use(express.json())
 
-const verifierId = (req,res,next) => {
-    const id = Number(req.params.id)
 
-    if(Number.isNaN(id)) {
-        return res.status(400).json({message: "L'id doit être un nombre"})
-    }
-
-    req.id = id 
-    next()
-}
 
 // Definit la route GET '/'
 app.get('/', (req, res) => {
@@ -87,7 +80,7 @@ app.get('/api/pokemons/aleatoire', (req, res) => {
 })
 
 // Renvoie un pokemon a partir de son id
-app.get('/api/pokemons/:id', verifierId,  (req, res) => {
+app.get('/api/pokemons/:id', verifierId, chargerPokemon,  (req, res) => {
 
     const pokemon = pokemons.find(p => p.id === req.id)
 
@@ -137,7 +130,7 @@ app.get('/api/dresseurs', (req, res) => {
 })
 
 // Renvoie un dresseur à partir de son identifiant
-app.get('/api/dresseurs/:id', verifierId, (req, res) => {
+app.get('/api/dresseurs/:id', verifierId, chargerDresseur, (req, res) => {
     const id = Number(req.params.id)
     const dresseur = dresseurs.find(d => d.id === id)
 
