@@ -41,7 +41,7 @@ const verifierId = (req,res,next) => {
     const id = Number(req.params.id)
 
     if(Number.isNaN(id)) {
-        res.status(400).json({message: "L'id doit être un nombre"})
+        return res.status(400).json({message: "L'id doit être un nombre"})
     }
 
     req.id = id 
@@ -84,8 +84,6 @@ app.get('/api/pokemons/:id', verifierId,  (req, res) => {
     res.json(pokemon)
 })
 
-
-
 // Renvoie la liste de tous les dresseurs
 app.get('/api/dresseurs', (req, res) => {
     res.json(dresseurs)
@@ -102,10 +100,20 @@ app.get('/api/dresseurs/:id', verifierId, (req, res) => {
     res.json(dresseur)
 })
 
+// Route de test : provoque volontairement une erreure
+app.get('/api/test-erreur', (req, res) => {
+    throw new Error('Erreur volontaire pour le test')
+})
+
 app.use((req, res, next) => {
     res.status(404).json({message: "Route introuvable"})
 })
 
+// Gere toutes les erreures survenues dans les routes
+app.use((err, req, res, next) => {
+    console.error(err)
+    res.status(500).json({message: 'Erreur interne du serveur'})
+})
 
 // Demarre le serveur
 app.listen(port, () => {
