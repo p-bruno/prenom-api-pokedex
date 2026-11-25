@@ -36,6 +36,7 @@ const dresseurs = [
 
 // Affiche chaque reqete recue dans le terminal
 app.use(morgan('dev'))
+app.use(express.json())
 
 const verifierId = (req,res,next) => {
     const id = Number(req.params.id)
@@ -64,6 +65,24 @@ app.get('/api/pokemons', (req, res) => {
     }
 
     res.json(pokemons)
+})
+
+// Ajoute un pokémon
+app.post('/api/pokemons', (req, res) => {
+    const nom = req.body.nom
+    const type = req.body.type
+
+    let idMax = 0
+    for (const pokemon of pokemons) {
+        if(pokemon.id > idMax) {
+            idMax = pokemon.id
+        }
+    }
+
+    const nouveauPokemon = {id: idMax + 1, nom: nom, type: type}
+    pokemons.push(nouveauPokemon)
+
+    res.status(201).json(nouveauPokemon)
 })
 
 // Renvoie un pokemon choisi au hasard
