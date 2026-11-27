@@ -4,17 +4,26 @@ const pokemons = require('../data/pokemons')
 const verifierId = require('../middlewares/verifierId')
 const {chargerPokemon} = require('../middlewares/charger')
 const router = express.Router()
-
+const db = require("../config/database")
 
 // Renvoie la liste des pokémons
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
     const type = req.query.type
 
     if (type) {
-        const resultat = pokemons.filter(p => p.type === type)
+        const [resultat] = await db.execute("SELECT * FROM pokemons WHERE type=?", [type])
         return res.json(resultat)
     }
 
+    // pokemons = [lignes, colonnes]
+    /*
+    déstructuration de tableau
+    consta tableau = [a,b,c]
+    const [x] = tableau // x =a
+    const [x,y] = tabeau // x = a et y = b
+    const [,y] = tableau // y = b
+    */
+    const [pokemons] = await db.execute("SELECT * FROM pokemons")
     res.json(pokemons)
 })
 
